@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Lightweight Todo App</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2rem;
+      background: #f7f7f7;
+      color: #333;
+    }
+    h1 {
+      font-size: 1.5rem;
+    }
+    #todos {
+      list-style-type: none;
+      padding: 0;
+    }
+    #todos li {
+      background: #fff;
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 3px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    #todoForm {
+      display: flex;
+      margin-top: 1rem;
+    }
+    #todoInput {
+      flex: 1;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 3px 0 0 3px;
+    }
+    #todoForm button {
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-left: none;
+      background: #333;
+      color: #fff;
+      border-radius: 0 3px 3px 0;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Todo App</h1>
+  <ul id="todos"></ul>
+  <form id="todoForm">
+    <input type="text" id="todoInput" placeholder="Add a todo..." required>
+    <button type="submit">Add</button>
+  </form>
+
+  <script>
+    // Replace with your WebSocket server address if different.
+    var ws = new WebSocket('ws://localhost:8080');
+
+    // Log connection status.
+    ws.onopen = function() {
+      console.log("WebSocket connected.");
+    };
+
+    // When receiving a message, assume it's a JSON string containing a "todo" property.
+    ws.onmessage = function(event) {
+      try {
+        var data = JSON.parse(event.data);
+        console.log(event.data);
+        
+        if (data.todo) {
+          var ul = document.getElementById('todos');
+          var li = document.createElement('li');
+          li.textContent = data.todo;
+          ul.appendChild(li);
+        }
+      } catch(e) {
+        console.error("Error parsing message:", e);
+      }
+    };
+
+    // Handle form submission.
+    document.getElementById('todoForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var input = document.getElementById('todoInput');
+      var todo = input.value.trim();
+      if (todo) {
+        // Send the new todo as a JSON message.
+        ws.send(JSON.stringify({ todo: todo }));
+        input.value = "";
+      }
+    });
+  </script>
+</body>
+</html>
