@@ -7,7 +7,6 @@ const { generateUniqueName, colors } = require("./helper");
 const app = express();
 const wsinstance = expressWs(app);
 const port = 8080;
-const clients = new Map();
 
 // Use CORS middleware to allow requests from specific origins
 app.use(cors({

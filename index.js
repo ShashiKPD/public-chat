@@ -1,8 +1,8 @@
 var overlay = document.getElementById('overlay');
     var url = "https://todo-websocket-basic.onrender.com/healthcheck";
-    // var url = "http://localhost/healthcheck"
+    // var url = "http://192.168.10.12:8080/healthcheck"
     var wssurl = "wss://todo-websocket-basic.onrender.com/ws";
-    // var wssurl = "ws://localhost/ws";
+    // var wssurl = "ws://192.168.10.12:8080/ws";
 
     function wakeUpBackend() {
       makeApiRequest(url, function(error, data) {
@@ -10,17 +10,17 @@ var overlay = document.getElementById('overlay');
           
           console.log("Backend response:", data);
           overlay.style.display = 'none';
+
+          setTimeout(function () {
+            wakeUpBackend(); //keep alive
+          }, 60000);
         } else {
           console.error("Error waking up backend:", error);
           overlay.textContent = "Failed to connect to backend";
         }
       });
     }
-
     wakeUpBackend();
-    setTimeout(() => {
-      wakeUpBackend(); //keep alive
-    }, 60000);
 
     // Replace with your WebSocket server address if different.
     var ws = new WebSocket(wssurl);
