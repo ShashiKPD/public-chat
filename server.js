@@ -4,7 +4,7 @@ const expressWs = require('express-ws');
 
 // Initialize express and express-ws
 const app = express();
-expressWs(app);
+const wsinstance = expressWs(app);
 
 const port = 8080;
 
@@ -26,7 +26,7 @@ app.ws('/ws', function (ws, req) {
     console.log('Received:', message);
 
     // Broadcast to all connected clients
-    app.getWss().clients.forEach(function (client) {
+    wsinstance.getWss().clients.forEach(function (client) {
       if (client.readyState === 1) { // 1 corresponds to OPEN state
         client.send(message);
       }
