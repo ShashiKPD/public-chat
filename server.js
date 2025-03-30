@@ -8,8 +8,7 @@ const healthCheckPort = 8081;
 
 // Use CORS middleware to allow requests from specific origins
 app.use(cors({
-  origin: 'http://localhost:3000', // Replace with the allowed origin
-  credentials: true
+  origin: '*' // Replace with the allowed origin
 }));
 
 
