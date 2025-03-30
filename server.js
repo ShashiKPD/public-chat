@@ -1,12 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const expressWs = require('express-ws');
-
+const { v4: uuidv4 } = require('uuid');
+const { generateUniqueName, colors } = require("./helper");
 // Initialize express and express-ws
 const app = express();
 const wsinstance = expressWs(app);
-
 const port = 8080;
+const clients = new Map();
 
 // Use CORS middleware to allow requests from specific origins
 app.use(cors({
@@ -20,15 +21,26 @@ app.get('/healthcheck', function (req, res) {
 
 // WebSocket endpoint
 app.ws('/ws', function (ws, req) {
-  console.log('Client connected');
+  ws.clientId = uuidv4(); // Generate a unique ID
+  ws.clientName = generateUniqueName();
+  ws.clientColor = colors[Math.floor(Math.random() * 100)];
+
+  console.log(`Client connected with ID: ${ws.clientId}`);
 
   ws.on('message', function (message) {
-    console.log('Received:', message);
+    console.log(`Message from ${ws.clientId}:`, message);
 
     // Broadcast to all connected clients
     wsinstance.getWss().clients.forEach(function (client) {
+      const msg = JSON.parse(message)
+      msg.from = {}
+      msg.from.userID = ws.clientId;
+      msg.from.name = ws.clientName;
+      msg.fromUserColor = ws.clientColor;
+      // console.log(msg);
+      
       if (client.readyState === 1) { // 1 corresponds to OPEN state
-        client.send(message);
+        client.send(JSON.stringify(msg));
       }
     });
   });

@@ -2,43 +2,63 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Lightweight Todo App</title>
+  <title>Public Chat</title>
   <script src="oldMethods.js"></script>
   <style>
     body {
       font-family: sans-serif;
-      margin: 2rem;
+      margin: 0;
       background: #f7f7f7;
       color: #333;
     }
-    h1 {
-      font-size: 1.5rem;
+    header {
+      display: block;
+      font-size: 2rem;
+      font-weight: bold;
+      position: sticky;
+      top: 0px;
+      padding: 10px 2rem;
+      background-color: lavender;
     }
-    #todos {
+    #content {
+      margin: 2rem;
+    }
+    #msgs {
       list-style-type: none;
       padding: 0;
+      margin-bottom: 100px;
     }
-    #todos li {
+    #msgs li {
+      font-size: 1.5rem;
       background: #fff;
       margin-bottom: 0.5rem;
       padding: 0.5rem;
       border-radius: 3px;
       box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
-    #todoForm {
+    #msgs >li > span {
+      overflow: scroll;
+    }
+    #msgForm {
+      position: fixed;
+      bottom: 0px;
+      padding: 15px 2rem 20px;
+      /* padding-bottom: 30px; */
+      background-color: #e9e9e9;
+      width: calc(100% - 4rem);
       display: flex;
       margin-top: 1rem;
     }
-    #todoInput {
+    #msgInput {
       flex: 1;
       padding: 0.5rem;
-      font-size: 1rem;
+      font-size: 1.5rem;
       border: 1px solid #ccc;
       border-radius: 3px 0 0 3px;
     }
-    #todoForm button {
+    #msgForm button {
       padding: 0.5rem 1rem;
-      font-size: 1rem;
+      font-size: 1.5rem;
       border: 1px solid #ccc;
       border-left: none;
       background: #333;
@@ -50,73 +70,19 @@
 </head>
 <body>
   <div id="overlay">Waking up backend...</div>
-  <h2 id="test"></h2>
-  <h1>Todo App</h1>
-  <ul id="todos"></ul>
-  <form id="todoForm">
-    <input type="text" id="todoInput" placeholder="Add a todo..." required>
-    <button type="submit">Add</button>
-  </form>
+  <!-- <h2 id="test"></h2> -->
+  <header>Public Chat App</header>
+  <div id="content">
 
-  <script>
-var overlay = document.getElementById('overlay');
-    var url = "https://todo-websocket-basic.onrender.com/healthcheck";
-    // var url = "http://localhost:8080/healthcheck"
-    var wssurl = "wss://todo-websocket-basic.onrender.com/ws";
-    // var wssurl = "ws://localhost:8080/ws";
+    <ul id="msgs"></ul>
+  </div>
+    <form id="msgForm">
+      <input type="text" id="msgInput" placeholder="Send a message..." required>
+      <button type="submit">Send</button>
+    </form>
 
-    function wakeUpBackend() {
-      makeApiRequest(url, function(error, data) {
-        if (!error) {
-          
-          console.log("Backend response:", data);
-          overlay.style.display = 'none';
-        } else {
-          console.error("Error waking up backend:", error);
-          overlay.textContent = "Failed to connect to backend";
-        }
-      });
-    }
+  <script src="./index.js">
 
-    wakeUpBackend();
-
-
-    // Replace with your WebSocket server address if different.
-    var ws = new WebSocket(wssurl);
-
-    // Log connection status.
-    ws.onopen = function() {
-      console.log("WebSocket connected.");
-    };
-
-    // When receiving a message, assume it's a JSON string containing a "todo" property.
-    ws.onmessage = function(event) {
-      try {
-        var data = JSON.parse(event.data);
-        console.log(event.data);
-        
-        if (data.todo) {
-          var ul = document.getElementById('todos');
-          var li = document.createElement('li');
-          li.textContent = data.todo;
-          ul.appendChild(li);
-        }
-      } catch(e) {
-        console.error("Error parsing message:", e);
-      }
-    };
-
-    // Handle form submission.
-    document.getElementById('todoForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      var input = document.getElementById('todoInput');
-      var todo = input.value.trim();
-      if (todo) {
-        // Send the new todo as a JSON message.
-        ws.send(JSON.stringify({ todo: todo }));
-        input.value = "";
-      }
-    });
   </script>
 </body>
 </html>
