@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Lightweight Todo App</title>
+  <script src="oldMethods.js"></script>
   <style>
     body {
       font-family: sans-serif;
@@ -48,6 +49,8 @@
   </style>
 </head>
 <body>
+  <div id="overlay">Waking up backend...</div>
+  <h2 id="test"></h2>
   <h1>Todo App</h1>
   <ul id="todos"></ul>
   <form id="todoForm">
@@ -56,8 +59,30 @@
   </form>
 
   <script>
+var overlay = document.getElementById('overlay');
+    var url = "https://todo-websocket-basic.onrender.com/healthcheck";
+    // var url = "http://localhost:8081/healthcheck"
+    var wssurl = "wss://todo-websocket-basic.onrender.com";
+    // var wssurl = "ws://localhost:8080";
+
+    function wakeUpBackend() {
+      makeApiRequest(url, function(error, data) {
+        if (!error) {
+          
+          console.log("Backend response:", data);
+          overlay.style.display = 'none';
+        } else {
+          console.error("Error waking up backend:", error);
+          overlay.textContent = "Failed to connect to backend";
+        }
+      });
+    }
+
+    wakeUpBackend();
+
+
     // Replace with your WebSocket server address if different.
-    var ws = new WebSocket('wss://todo-websocket-basic.onrender.com');
+    var ws = new WebSocket(wssurl);
 
     // Log connection status.
     ws.onopen = function() {
