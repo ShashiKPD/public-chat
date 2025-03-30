@@ -1,21 +1,21 @@
+const express = require('express');
+const cors = require('cors');
 const WebSocket = require('ws');
-const http = require('http');
 
+const app = express();
 const port = 8080;
 const healthCheckPort = 8081;
 
-// Create an HTTP server for health check
-const healthCheckServer = http.createServer((req, res) => {
-  if (req.method === 'GET' && req.url === '/healthcheck') {
-    res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
-    res.end(JSON.stringify({ status: 'ok' }));
-  } else {
-    res.writeHead(404, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
-    res.end(JSON.stringify({ error: 'Not Found' }));
-  }
+// Use CORS middleware
+app.use(cors());
+
+// Health check endpoint
+app.get('/healthcheck', (req, res) => {
+  res.json({ status: 'ok' });
 });
 
-healthCheckServer.listen(healthCheckPort, () => {
+// Start the health check server
+app.listen(healthCheckPort, () => {
   console.log(`Health check server is running on http://localhost:${healthCheckPort}/healthcheck`);
 });
 
