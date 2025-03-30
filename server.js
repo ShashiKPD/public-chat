@@ -6,8 +6,11 @@ const app = express();
 const port = 8080;
 const healthCheckPort = 8081;
 
-// Use CORS middleware
-app.use(cors());
+// Use CORS middleware to allow requests from specific origins
+app.use(cors({
+  origin: 'http://localhost:3000' // Replace with the allowed origin
+}));
+
 
 // Health check endpoint
 app.get('/healthcheck', (req, res) => {
