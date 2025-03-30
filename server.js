@@ -1,41 +1,44 @@
 const express = require('express');
 const cors = require('cors');
-const WebSocket = require('ws');
+const expressWs = require('express-ws');
 
 const app = express();
+const wsInstance = expressWs(app); // Store express-ws instance
+
 const port = 8080;
-const healthCheckPort = 8081;
 
-// Use CORS middleware to allow requests from specific origins
 app.use(cors({
-  origin: '*' // Replace with the allowed origin
+  origin: '*' // Allow all origins (for testing purposes)
 }));
-
 
 // Health check endpoint
 app.get('/healthcheck', (req, res) => {
   res.json({ status: 'ok' });
 });
 
-// Start the health check server
-app.listen(healthCheckPort, () => {
-  console.log(`Health check server is running on http://localhost:${healthCheckPort}/healthcheck`);
+// WebSocket endpoint
+app.ws('/ws', (ws, req) => {
+  console.log('Client connected');
+
+  ws.on('message', (message) => {
+    console.log('Received:', message);
+
+    // ✅ FIX: Use wsInstance.getWss() instead of app.getWss()
+    wsInstance.getWss().clients.forEach((client) => {
+      if (client.readyState === 1) {
+        client.send(message);
+      }
+    });
+  });
+
+  ws.on('close', () => {
+    console.log('Client disconnected');
+  });
 });
 
-// // Create a new WebSocket server
-// const wss = new WebSocket.Server({ port: port }, () => {
-//   console.log(`WebSocket server is running on ws://localhost:${port}`);
-// });
-
-// // Broadcast incoming messages to all connected clients
-// wss.on('connection', function connection(ws) {
-//   ws.on('message', function incoming(message) {
-//     console.log('received: %s', message);
-//     // Broadcast to every connected client
-//     wss.clients.forEach(function each(client) {
-//       if (client.readyState === WebSocket.OPEN) {
-//         client.send(message.toString());
-//       }
-//     });
-//   });
-// });
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`WebSocket endpoint available at ws://localhost:${port}/ws`);
+  console.log(`Health check endpoint available at http://localhost:${port}/healthcheck`);
+});
