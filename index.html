@@ -13,12 +13,18 @@
     }
     header {
       display: block;
-      font-size: 2rem;
+      font-size: 1.5rem;
       font-weight: bold;
       position: sticky;
       top: 0px;
-      padding: 10px 2rem;
+      margin: 0 10px;
+      padding: 1rem 2rem;
+      border-radius: 0 0 20px 20px;
       background-color: lavender;
+    }
+    header > img {
+      max-height: 1.7rem;
+      padding-right: 10px;
     }
     #content {
       margin: 2rem;
@@ -36,13 +42,16 @@
       border-radius: 3px;
       box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
-    #msgs >li > span {
+    #msgs > li > span {
       overflow: scroll;
     }
     #msgForm {
       position: fixed;
       bottom: 0px;
-      padding: 15px 2rem 20px;
+      padding: 1.5rem;
+      margin: 0 10px;
+      border-top-left-radius: 40px;
+      border-top-right-radius: 40px;
       /* padding-bottom: 30px; */
       background-color: #e9e9e9;
       width: calc(100% - 4rem);
@@ -52,18 +61,20 @@
     #msgInput {
       flex: 1;
       padding: 0.5rem;
+      padding-left: 1.5rem;
       font-size: 1.5rem;
       border: 1px solid #ccc;
-      border-radius: 3px 0 0 3px;
+      border-radius: 20px 0 0 20px;
     }
     #msgForm button {
-      padding: 0.5rem 1rem;
+      padding: 0.5rem 1.4rem 0.5rem 1rem;
       font-size: 1.5rem;
       border: 1px solid #ccc;
       border-left: none;
+      border-radius: 40px;
       background: #333;
       color: #fff;
-      border-radius: 0 3px 3px 0;
+      border-radius: 0 20px 20px 0;
       cursor: pointer;
     }
   </style>
@@ -71,7 +82,10 @@
 <body>
   <div id="overlay">Waking up backend...</div>
   <!-- <h2 id="test"></h2> -->
-  <header>Public Chat App</header>
+  <header> 
+    <img src="./team.png">
+    Public Chat App
+  </header>
   <div id="content">
 
     <ul id="msgs"></ul>

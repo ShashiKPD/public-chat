@@ -18,7 +18,9 @@ var overlay = document.getElementById('overlay');
     }
 
     wakeUpBackend();
-
+    setTimeout(() => {
+      wakeUpBackend(); //keep alive
+    }, 60000);
 
     // Replace with your WebSocket server address if different.
     var ws = new WebSocket(wssurl);
