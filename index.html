@@ -60,10 +60,10 @@
 
   <script>
 var overlay = document.getElementById('overlay');
-    var url = "https://todo-websocket-basic.onrender.com/healthcheck";
-    // var url = "http://localhost:8080/healthcheck"
-    var wssurl = "wss://todo-websocket-basic.onrender.com/ws";
-    // var wssurl = "ws://localhost:8080/ws";
+    // var url = "https://todo-websocket-basic.onrender.com/healthcheck";
+    var url = "http://localhost:8080/healthcheck"
+    // var wssurl = "wss://todo-websocket-basic.onrender.com/ws";
+    var wssurl = "ws://localhost:8080/ws";
 
     function wakeUpBackend() {
       makeApiRequest(url, function(error, data) {
