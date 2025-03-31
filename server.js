@@ -18,37 +18,40 @@ app.get('/healthcheck', function (req, res) {
   res.json({ status: 'ok' });
 });
 
-// WebSocket endpoint
-app.ws('/ws', function (ws, req) {
-  ws.clientId = uuidv4(); // Generate a unique ID
-  ws.clientName = generateUniqueName();
-  ws.clientColor = colors[Math.floor(Math.random() * 100)];
+try{
+  // WebSocket endpoint
+  app.ws('/ws', function (ws, req) {
+    ws.clientId = uuidv4(); // Generate a unique ID
+    ws.clientName = generateUniqueName();
+    ws.clientColor = colors[Math.floor(Math.random() * 100)];
 
-  console.log(`Client connected with ID: ${ws.clientId}`);
+    console.log(`Client connected with ID: ${ws.clientId}`);
 
-  ws.on('message', function (message) {
-    console.log(`Message from ${ws.clientId}:`, message);
+    ws.on('message', function (message) {
+      console.log(`Message from ${ws.clientId}:`, message);
 
-    // Broadcast to all connected clients
-    wsinstance.getWss().clients.forEach(function (client) {
-      const msg = JSON.parse(message)
-      msg.from = {}
-      msg.from.userID = ws.clientId;
-      msg.from.name = ws.clientName;
-      msg.fromUserColor = ws.clientColor;
-      // console.log(msg);
-      
-      if (client.readyState === 1) { // 1 corresponds to OPEN state
-        client.send(JSON.stringify(msg));
-      }
+      // Broadcast to all connected clients
+      wsinstance.getWss().clients.forEach(function (client) {
+        const msg = JSON.parse(message)
+        msg.from = {}
+        msg.from.userID = ws.clientId;
+        msg.from.name = ws.clientName;
+        msg.fromUserColor = ws.clientColor;
+        // console.log(msg);
+        
+        if (client.readyState === 1) { // 1 corresponds to OPEN state
+          client.send(JSON.stringify(msg));
+        }
+      });
+    });
+
+    ws.on('close', function () {
+      console.log('Client disconnected');
     });
   });
-
-  ws.on('close', function () {
-    console.log('Client disconnected');
-  });
-});
-
+}catch(error){
+  console.log(error);
+}
 // Start the server (single listen call)
 app.listen(port, function () {
   console.log('Server is running on http://localhost:' + port);
