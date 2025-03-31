@@ -59,9 +59,10 @@ try{
   // WebSocket endpoint
   app.ws('/ws', function (ws, req) {
     if (!req.cookies.userId) {
-      console.log('No userId found.');
-      ws.send({message: "Cookie not found, disconnecting.", from: {userId: 'ADMINUSER', name: 'ADMIN', userColor: '#ff0000'}});
-      ws.close();
+      console.log('No userId found. Closing connection');
+      ws.send(JSON.stringify({message: "Cookie not found, disconnecting.", from: {userId: 'ADMINUSER', name: 'ADMIN', userColor: '#ff0000'}}), () => {
+        ws.close();
+      });    
       return;
     }
     ws.clientId = req.cookies.userId;
