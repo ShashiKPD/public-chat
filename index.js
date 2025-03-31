@@ -1,11 +1,11 @@
 var overlay = document.getElementById('overlay');
-    var url = "https://todo-websocket-basic.onrender.com/healthcheck";
-    // var url = "http://192.168.10.12:8080/healthcheck"
+    var baseurl = "https://todo-websocket-basic.onrender.com";
+    // var baseurl = "http://192.168.10.12:8080"
     var wssurl = "wss://todo-websocket-basic.onrender.com/ws";
     // var wssurl = "ws://192.168.10.12:8080/ws";
 
     function wakeUpBackend() {
-      makeApiRequest(url, function(error, data) {
+      makeApiRequest(baseurl + "/healthcheck", function(error, data) {
         if (!error) {
           
           console.log("Backend response:", data);
@@ -22,30 +22,39 @@ var overlay = document.getElementById('overlay');
     }
     wakeUpBackend();
 
-    // Replace with your WebSocket server address if different.
+    // get userID
+    makeApiRequest(baseurl + "/connect", function(error, data) {
+      if (!error) {
+        console.log("User:", data);
+        startWebSocket();
+      } else {
+        console.error("Error getting userID:", error);
+      }
+    });
+
+  function startWebSocket(){
     var ws = new WebSocket(wssurl);
 
-    // Log connection status.
     ws.onopen = function() {
       console.log("WebSocket connected.");
     };
 
-    // When receiving a message, assume it's a JSON string containing a "todo" property.
+    // When receiving a message, assume it's a JSON string containing a "message" property.
     ws.onmessage = function(event) {
       try {
         var data = JSON.parse(event.data);
         console.log(event.data);
         
-        if (data.todo) {
+        if (data.message) {
           var ul = document.getElementById('msgs');
           var username = document.createElement('span');
-          username.style.color = data.fromUserColor
+          username.style.color = data.from.userColor
           var message = document.createElement('span');
           var li = document.createElement('li');
           console.log(data);
           
           username.textContent = data.from.name + ": ";
-          message.textContent = data.todo;
+          message.textContent = data.message;
 
           li.appendChild(username);
           li.appendChild(message);
@@ -60,10 +69,10 @@ var overlay = document.getElementById('overlay');
     document.getElementById('msgForm').addEventListener('submit', function(e) {
       e.preventDefault();
       var input = document.getElementById('msgInput');
-      var todo = input.value.trim();
-      if (todo) {
-        // Send the new todo as a JSON message.
-        ws.send(JSON.stringify({ todo: todo }));
+      var message = input.value.trim();
+      if (message) {
+        ws.send(JSON.stringify({ message: message }));
         input.value = "";
       }
     });
+  }
