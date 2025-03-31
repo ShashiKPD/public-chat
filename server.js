@@ -44,6 +44,9 @@ try{
         }
       });
     });
+    ws.on('error', function (error) {
+      console.error(`WebSocket error for client ${ws.clientId}:`, error);
+    });
 
     ws.on('close', function () {
       console.log('Client disconnected');
@@ -52,6 +55,9 @@ try{
 }catch(error){
   console.log(error);
 }
+
+
+
 // Start the server (single listen call)
 app.listen(port, function () {
   console.log('Server is running on http://localhost:' + port);
