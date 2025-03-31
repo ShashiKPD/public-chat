@@ -42,10 +42,10 @@ app.get('/connect', function (req, res) {
     userColor: colors[Math.floor(Math.random() * 100)]
   }
   cookieOptions = { 
-    // httpOnly: false, 
+    httpOnly: false, 
     secure: process.env.NODE_ENV === "production", 
     sameSite: (process.env.NODE_ENV === "production") ? 'none' : '',
-    // maxAge: 24 * 60 * 60 * 1000
+    maxAge: 24 * 60 * 60 * 1000
   }
   // if(req.headers['user-agent'] == process.env.THAT_USER_AGENT) {
   //   cookieOptions.httpOnly = false;
