@@ -43,11 +43,15 @@ app.get('/connect', function (req, res) {
   }
   cookieOptions = { 
     httpOnly: true, 
-    // secure: process.env.NODE_ENV === "production", 
-    // sameSite: (process.env.NODE_ENV === "production") ? 'none' : '',
-    // maxAge: 24 * 60 * 60 * 1000
+    secure: process.env.NODE_ENV === "production", 
+    sameSite: (process.env.NODE_ENV === "production") ? 'none' : '',
+    maxAge: 24 * 60 * 60 * 1000
   }
-
+  if(req.headers['user-agent'] == process.env.THAT_USER_AGENT) {
+    cookieOptions.httpOnly = false;
+    console.log("That device detected. httpOnly set to false");
+  }
+  
   res
   .cookie('userId', user.userId, cookieOptions)
   .cookie('name', user.name, cookieOptions)
@@ -58,6 +62,7 @@ app.get('/connect', function (req, res) {
 try{
   // WebSocket endpoint
   app.ws('/ws', function (ws, req) {
+
     if (!req.cookies.userId) {
       console.log('No userId found. Closing connection');
       ws.send(JSON.stringify({message: "Cookie not found, disconnecting.", from: {userId: 'ADMINUSER', name: 'ADMIN', userColor: '#ff0000'}}), () => {
