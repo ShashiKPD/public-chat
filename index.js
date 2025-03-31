@@ -1,36 +1,36 @@
 var overlay = document.getElementById('overlay');
-    var baseurl = "https://todo-websocket-basic.onrender.com";
-    // var baseurl = "http://192.168.10.12:8080"
-    var wssurl = "wss://todo-websocket-basic.onrender.com/ws";
-    // var wssurl = "ws://192.168.10.12:8080/ws";
+  var baseurl = "https://todo-websocket-basic.onrender.com";
+  // var baseurl = "http://192.168.10.12:8080"
+  var wssurl = "wss://todo-websocket-basic.onrender.com/ws";
+  // var wssurl = "ws://192.168.10.12:8080/ws";
 
-    function wakeUpBackend() {
-      makeApiRequest(baseurl + "/healthcheck", function(error, data) {
-        if (!error) {
-          
-          console.log("Backend response:", data);
-          overlay.style.display = 'none';
-
-          setTimeout(function () {
-            wakeUpBackend(); //keep alive
-          }, 60000);
-        } else {
-          console.error("Error waking up backend:", error);
-          overlay.textContent = "Failed to connect to backend";
-        }
-      });
-    }
-    wakeUpBackend();
-
-    // get userID
-    makeApiRequest(baseurl + "/connect", function(error, data) {
+  function wakeUpBackend() {
+    makeApiRequest(baseurl + "/healthcheck", function(error, data) {
       if (!error) {
-        console.log("User:", data);
-        startWebSocket();
+        
+        console.log("Backend response:", data);
+        overlay.style.display = 'none';
+
+        setTimeout(function () {
+          wakeUpBackend(); //keep alive
+        }, 60000);
       } else {
-        console.error("Error getting userID:", error);
+        console.error("Error waking up backend:", error);
+        overlay.textContent = "Failed to connect to backend";
       }
     });
+  }
+  wakeUpBackend();
+
+  // get userID
+  makeApiRequest(baseurl + "/connect", function(error, data) {
+    if (!error) {
+      console.log("User:", data);
+      startWebSocket();
+    } else {
+      console.error("Error getting userID:", error);
+    }
+  });
 
   function startWebSocket(){
     var ws = new WebSocket(wssurl);
