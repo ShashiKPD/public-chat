@@ -10,7 +10,7 @@ const port = 8080;
 
 // Use CORS middleware to allow requests from specific origins
 app.use(cors({
-  origin: '*' // Replace with the allowed origin
+  origin: 'https://vartalap-kpd.vercel.app' 
 }));
 
 // Health check endpoint
