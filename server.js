@@ -16,7 +16,7 @@ dotenv.config();
 
 app.use(cors({
   origin: (origin, callback) => {
-    const allowedOrigins = ['https://vartalap-kpd.vercel.app', 'http://127.0.0.1:3000', 'http://192.168.10.12:3000']
+    const allowedOrigins = ['https://vartalap-kpd.vercel.app', 'http://127.0.0.1:3000', 'http://192.168.10.12:3000', 'http://192.168.10.6:5500']
     if(allowedOrigins.includes(origin)){
       callback(null, true);
     }else{
