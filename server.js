@@ -5,7 +5,7 @@ const expressWs = require('express-ws');
 const cookieParser = require('cookie-parser');
 const { v4: uuidv4 } = require('uuid');
 const { generateUniqueName, colors } = require("./helper");
-// Initialize express and express-ws
+
 const app = express();
 const wsinstance = expressWs(app);
 const port = 8080;
@@ -60,6 +60,7 @@ try{
   app.ws('/ws', function (ws, req) {
     if (!req.cookies.userId) {
       console.log('No userId found.');
+      ws.send({message: "Cookie not found, disconnecting.", from: {userId: 'ADMINUSER', name: 'ADMIN', userColor: '#ff0000'}});
       ws.close();
       return;
     }
@@ -85,7 +86,7 @@ try{
         }
       });
     });
-    
+
     ws.on('error', function (error) {
       console.error(`WebSocket error for client ${ws.clientId}:`, error);
     });

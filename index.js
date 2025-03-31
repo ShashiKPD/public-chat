@@ -1,8 +1,8 @@
 var overlay = document.getElementById('overlay');
-  var baseurl = "https://todo-websocket-basic.onrender.com";
-  // var baseurl = "http://192.168.10.12:8080"
-  var wssurl = "wss://todo-websocket-basic.onrender.com/ws";
-  // var wssurl = "ws://192.168.10.12:8080/ws";
+  // var baseurl = "https://todo-websocket-basic.onrender.com";
+  var baseurl = "http://192.168.10.12:8080"
+  // var wssurl = "wss://todo-websocket-basic.onrender.com/ws";
+  var wssurl = "ws://192.168.10.12:8080/ws";
 
   function wakeUpBackend() {
     makeApiRequest(baseurl + "/healthcheck", function(error, data) {
