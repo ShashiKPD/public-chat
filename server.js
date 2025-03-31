@@ -43,7 +43,7 @@ app.get('/connect', function (req, res) {
   }
   cookieOptions = { 
     httpOnly: true, 
-    secure: process.env.NODE_ENV === "production", 
+    // secure: process.env.NODE_ENV === "production", 
     // sameSite: (process.env.NODE_ENV === "production") ? 'none' : '',
     maxAge: 24 * 60 * 60 * 1000
   }
