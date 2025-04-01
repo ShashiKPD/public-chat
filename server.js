@@ -47,12 +47,6 @@ app.get('/connect', function (req, res) {
     sameSite: (process.env.NODE_ENV === "production") ? 'none' : '',
     maxAge: 24 * 60 * 60 * 1000
   }
-  // if(req.headers['user-agent'] == process.env.THAT_USER_AGENT) {
-  //   cookieOptions.httpOnly = false;
-  //   cookieOptions.secure = false;
-  //   cookieOptions.samesite ='';
-  //   console.log("That device detected. httpOnly set to false");
-  // }
   
   res
   .cookie('userId', user.userId, cookieOptions)
